@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+    <Target Name="PushPackageToServer" AfterTargets="Pack">
+        <Message Text="Publishing package to '$(NuGetServerUrl)''"/>
+
+        <Exec Command="powershell -ExecutionPolicy Bypass &quot;$(PushScriptPath)&quot; -nupkgPath '$(ProjectDir)$(PackageOutputPath)$(PackageId).$(PackageVersion).nupkg' -serverUrl '$(NuGetServerUrl)' -apiKey '$(NuGetServerApiKey)' -nugetExePath '$(NuGetExePath)'"/>
+    </Target>
+</Project>

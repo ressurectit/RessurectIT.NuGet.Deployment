@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+    <PropertyGroup>
+        <NuGetServerApiKey Condition=" '$(NuGetServerApiKey)' == '' Or '$(NuGetServerApiKey)' == '*Undefined*' "></NuGetServerApiKey>
+        <NuGetServerUrl Condition=" '$(NuGetServerUrl)' == '' Or '$(NuGetServerUrl)' == '*Undefined*' ">http://nexus/service/local/nuget/ace_nuget/</NuGetServerUrl>
+        <NuGetSymbolServerApiKey Condition=" '$(NuGetSymbolServerApiKey)' == '' Or '$(NuGetSymbolServerApiKey)' == '*Undefined*' "></NuGetSymbolServerApiKey>
+        <NuGetSymbolServerUrl Condition=" '$(NuGetSymbolServerUrl)' == '' Or '$(NuGetSymbolServerUrl)' == '*Undefined*' "></NuGetSymbolServerUrl>
+        <NuGetExePath>$(NuGetPackageFolders)NuGet.CommandLine\3.5.0\tools\NuGet.exe</NuGetExePath>
+        <PushScriptPath>$(MSBuildThisFileDirectory)..\internalTools\pushToRepository.ps1</PushScriptPath>
+    </PropertyGroup>
+</Project>
