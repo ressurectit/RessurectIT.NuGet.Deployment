@@ -20,6 +20,8 @@
     <files>
         <file src="Build\RessurectIT.NuGet.Deployment.targets" target="build" />
         <file src="Build\RessurectIT.NuGet.Deployment.props" target="build" />
+        <file src="Build\RessurectIT.NuGet.Deployment.targets" target="buildCrossTargeting" />
+        <file src="Build\RessurectIT.NuGet.Deployment.props" target="buildCrossTargeting" />
         <file src="InternalTools\pushToRepository.ps1" target="internalTools" />
         <file src="readme.txt" target="" />
     </files>
