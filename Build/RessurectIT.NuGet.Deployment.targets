@@ -1,8 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
+    <UsingTask TaskName="GetNugetExePath" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v12.0.dll">
+        <ParameterGroup>
+            <NuGetExeFoldersParam Required="true" />
+            <NuGetExePathParam Required="true" />
+            <NuGetExePathResult Output="true" />
+        </ParameterGroup>
+        
+        <Task>
+            <Code Type="Fragment" Language="cs">
+                <![CDATA[  
+                    var folders = NuGetExeFoldersParam.Split(';');
+                    NuGetExePathResult = "";
+
+                    foreach(string folder in folders)
+                    {
+                        var resultPath = System.IO.Path.Combine(folder, NuGetExePathParam);
+                    
+                        if(System.IO.File.Exists(resultPath))
+                        {
+                            NuGetExePathResult = resultPath;
+                        }
+                    }
+                ]]>
+            </Code>
+        </Task>
+    </UsingTask>
+
     <Target Name="PushPackageToServer" AfterTargets="Pack">
         <Message Text="Publishing package to '$(NuGetServerUrl)''"/>
+        <Error Text="'NuGetExeFolders' msbuild property is empty!" Condition="$(NuGetExeFolders.Length) == 0" />
+        <Error Text="'NuGetExePath' msbuild property is empty!" Condition="$(NuGetExePath.Length) == 0" />
 
-        <Exec Command="powershell -ExecutionPolicy Bypass &quot;$(PushScriptPath)&quot; -nupkgPath '$(ProjectDir)$(PackageOutputPath)$(PackageId).$(PackageVersion).nupkg' -serverUrl '$(NuGetServerUrl)' -apiKey '$(NuGetServerApiKey)' -nugetExePath '$(NuGetExePath)'"/>
+        <GetNugetExePath NuGetExeFoldersParam="$(NuGetExeFolders)" NuGetExePathParam="$(NuGetExePath)">
+            <Output TaskParameter="NuGetExePathResult" PropertyName="NuGetExePathFound" />
+        </GetNugetExePath>
+
+        <Message Text="NuGet.exe found at '$(NuGetExePathFound)'" Condition="$(NuGetExePathFound.Length) != 0" />
+        <Error Text="NuGet.exe was not found in folders '$(NuGetExeFolders)'' and on path '$(NuGetExePath)'!" Condition="$(NuGetExePathFound.Length) == 0" />
+        
+        <Exec Command="powershell -ExecutionPolicy Bypass &quot;$(PushScriptPath)&quot; -nupkgPath '$(ProjectDir)$(PackageOutputPath)$(PackageId).$(PackageVersion).nupkg' -serverUrl '$(NuGetServerUrl)' -apiKey '$(NuGetServerApiKey)' -nugetExePath '$(NuGetExePathFound)'"/>
     </Target>
 </Project>
