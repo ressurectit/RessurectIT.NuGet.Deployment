@@ -7,8 +7,36 @@ param
 	[string]
 	$apiKey,
 	[string]
-	$nugetExePath
+	$nugetExePath,
+	[string]
+	$nugetExeFolders
 )
+
+$folders = $nugetExeFolders.Split(';');
+$result = "";
+
+$folders | % {
+	
+    $resultPath = (Join-Path $_ $nugetExePath)
+
+    if((Test-Path $resultPath))
+    {
+        $result = $resultPath;
+    }
+}
+
+if($result.Length -ne 0)
+{
+	Write-Host "NuGet.exe found at '$result'"
+}
+else
+{
+	Write-Error "NuGet.exe was not found in folders '$nugetExeFolders' and on path '$nugetExePath'!"
+
+	return -1
+}
+
+$nugetExePath = $result
 
 if(!(Test-Path $nupkgPath))
 {
