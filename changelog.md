@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 3.0.0 (2022-01-31)
+
+### BREAKING CHANGES
+
+- updated `NuGet.CommandLine` to latest `6.0.0`
+
 ## Version 2.1.4
 
 - fixed path to NuGet.CommandLine package
